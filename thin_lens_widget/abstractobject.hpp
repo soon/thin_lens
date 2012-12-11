@@ -23,7 +23,9 @@ public:
     virtual void setBegin(const QPoint &) = 0;
     virtual void setEnd(const QPoint &) = 0;
 
-    virtual void paint(QPainter *, QPaintEvent *) = 0;
+    virtual void paint(QPainter &) = 0;
+
+    virtual AbstractObject *clone() const = 0;
 };
 
 } // namespace ThinLens

@@ -2,18 +2,15 @@
 #define THINLENSSYSTEM_HPP
 
 #include <QWidget>
+#include <QtGui/QPainter>
+#include <QtGui/QPaintEvent>
+
 #include <memory>
 
 #include "abstractobject.hpp"
 
 namespace ThinLens
 {
-
-enum TYPE
-{
-    COLLECTING,
-    DIVERGING
-};
 
 class ThinLensSystem : public QWidget
 {
@@ -22,27 +19,34 @@ class ThinLensSystem : public QWidget
 public:
     explicit ThinLensSystem
     (
-        AbstractObject *object,
-        TYPE state = TYPE::COLLECTING,
+        AbstractObject &object,
         int focus = 10,
         QWidget *parent = 0
     );
 
-    TYPE getState() const noexcept;
-    void setState(const TYPE &type) noexcept;
-    void switchState() noexcept;
+    int getFocus() const noexcept;
+    void setFocus(int) noexcept;
+    void switchType() noexcept;
 
-    AbstractObject *getObject() const noexcept;
-    void setObject(AbstractObject* object) noexcept;
+    const AbstractObject& getObject() const noexcept;
+    void setObject(AbstractObject &object) noexcept;
+
+    const AbstractObject& getImage() const noexcept;
 
 protected:
-    void paintEvent(QPaintEvent *) noexcept;
+    void paintEvent(QPaintEvent *);
+
+private:
+    void _drawAxis(QPainter &) const noexcept;
+    void _drawLens(QPainter &) const noexcept;
+    void _drawRays(QPainter &) const noexcept;
+
+    void _drawRaysFromPoint(QPainter &, const QPoint &) const noexcept;
     
 private:
-    AbstractObject                  *_object;
+    AbstractObject                  &_object;
     std::shared_ptr<AbstractObject> _image;
 
-    TYPE _state;
     int _focus;
 };
 

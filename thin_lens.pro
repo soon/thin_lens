@@ -23,3 +23,5 @@ HEADERS  += mainwindow.hpp \
     thin_lens_widget/abstractobject.hpp
 
 QMAKE_CXXFLAGS += -std=c++0x
+
+FORMS +=

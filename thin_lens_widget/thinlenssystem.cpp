@@ -7,59 +7,59 @@ namespace ThinLens
 
 ThinLensSystem::ThinLensSystem
 (
-    AbstractObject *object,
-    TYPE state,
+    AbstractObject &object,
     int focus,
     QWidget *parent
-) : QWidget(parent), _object(object), _state(state), _focus(focus)
+) : QWidget(parent), _object(object), _image(_object.clone()), _focus(focus)
 {
 
 }
 
-TYPE ThinLensSystem::getState() const noexcept
+inline int ThinLensSystem::getFocus() const noexcept
 {
-    return _state;
+    return _focus;
 }
 
-void ThinLensSystem::setState(const TYPE& state) noexcept
+inline void ThinLensSystem::setFocus(int focus) noexcept
 {
-    _state = state;
+    _focus = focus;
     update();
 }
 
-void ThinLensSystem::switchState() noexcept
+inline void ThinLensSystem::switchType() noexcept
 {
-    _state =
-    (
-        (_state == TYPE::COLLECTING)    ?
-            (TYPE::DIVERGING)           :
-            (TYPE::COLLECTING)
-    );
+    _focus = -_focus;
     update();
 }
 
-AbstractObject *ThinLensSystem::getObject() const noexcept
+inline const AbstractObject& ThinLensSystem::getObject() const noexcept
 {
     return _object;
 }
 
-void ThinLensSystem::setObject(AbstractObject *object) noexcept
+inline void ThinLensSystem::setObject(AbstractObject &object) noexcept
 {
     _object = object;
+    _image.reset(_object.clone());
     update();
 }
 
-void ThinLensSystem::paintEvent(QPaintEvent *event) noexcept
+inline const AbstractObject& ThinLensSystem::getImage() const noexcept
 {
-    QPainter painter(this);
+    return *_image;
+}
 
+inline void ThinLensSystem::_drawAxis(QPainter &painter) const noexcept
+{
     painter.drawLine(0, height() / 2, width(), height() / 2);
+}
 
-    // Drawing the lense
+inline void ThinLensSystem::_drawLens(QPainter &painter) const noexcept
+{
     auto dist = std::max
     (
-        std::abs(height() / 2 - _object -> getBegin().y()),
-        std::abs(height() / 2 - _object -> getEnd().y())
+        std::abs(height() / 2 - _object.getBegin().y()),
+        std::abs(height() / 2 - _object.getEnd().y())
     ) + 20;
     painter.drawLine
     (
@@ -67,7 +67,7 @@ void ThinLensSystem::paintEvent(QPaintEvent *event) noexcept
         width() / 2, height() / 2 + dist
     );
 
-    static auto delta = ((_state == TYPE::COLLECTING) ? (10) : (-10));
+    static auto delta = ((_focus < 0) ? (10) : (-10));
     painter.drawLine
     (
         width() / 2,                    height() / 2 - dist,
@@ -88,9 +88,36 @@ void ThinLensSystem::paintEvent(QPaintEvent *event) noexcept
         width() / 2,                    height() / 2 + dist,
         width() / 2 - std::abs(delta),  height() / 2 + dist - delta
     );
+}
 
-    // Drawing the object
-    _object -> paint(&painter, event);
+inline void ThinLensSystem::_drawRaysFromPoint
+(
+    QPainter &painter,
+    const QPoint &point
+) const noexcept
+{
+    painter.drawLine(point, QPoint(width() / 2, point.y()));
+    // painter.drawLine();
+}
+
+inline void ThinLensSystem::_drawRays(QPainter &painter) const noexcept
+{
+    _drawRaysFromPoint(painter, _object.getBegin());
+    _drawRaysFromPoint(painter, _object.getEnd());
+}
+
+void ThinLensSystem::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+
+
+
+    _drawAxis(painter);
+    _drawLens(painter);
+
+    _object.paint(painter);
+
+    _drawRays(painter);
 }
 
 } // namespace ThinLens

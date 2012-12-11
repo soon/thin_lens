@@ -11,21 +11,23 @@
 class Arrow : public ThinLens::AbstractObject
 {
 public:
-    explicit Arrow(const QPoint &begin, const QPoint &end);
-    
+    explicit Arrow(const QPoint &, const QPoint &);
+
     QPoint getBegin() const;
     QPoint getEnd() const;
 
     void setBegin(const QPoint &);
     void setEnd(const QPoint &);
 
-    void paint(QPainter *, QPaintEvent *);
+    void paint(QPainter &);
+
+    ThinLens::AbstractObject *clone() const;
 
 private:
     QPoint _begin;
     QPoint _end;
 
-    // static const double _ANGLE = M_PI / 18;
+    // static constexpr double _ANGLE = M_PI / 18;
     static constexpr double _RATIO = 0.1;
 };
 
