@@ -1,6 +1,6 @@
 #include "arrow.hpp"
 
-#include <QPoint>
+#include <QtCore/QPoint>
 #include <QtGui/QPainter>
 #include <QtGui/QPaintEvent>
 #include <QtCore/qmath.h>
@@ -11,36 +11,41 @@ Arrow::Arrow(const QPoint &begin, const QPoint &end)
 
 }
 
-inline QPoint Arrow::getBegin() const
+QPoint Arrow::getBegin() const
 {
     return _begin;
 }
 
-inline QPoint Arrow::getEnd() const
+QPoint Arrow::getEnd() const
 {
     return _end;
 }
 
-inline void Arrow::setBegin(const QPoint &begin)
+double Arrow::height() const
+{
+    return qSqrt(qPow(_begin.x() - _end.x(), 2) + qPow(_begin.y() - _end.y(), 2));
+}
+
+void Arrow::setBegin(const QPoint &begin)
 {
     _begin = begin;
 }
 
-inline void Arrow::setEnd(const QPoint &end)
+void Arrow::setEnd(const QPoint &end)
 {
     _end = end;
 }
 
-inline void Arrow::paint(QPainter &painter)
+void Arrow::paint(QPainter &painter)
 {
     painter.drawLine(_begin, _end);
 
     // Fix this
-    int r = static_cast<int>(qSqrt(qPow(_begin.x() - _end.x(), 2) + qPow(_begin.y() - _end.y(), 2)) * _RATIO);
+    int r = static_cast<int>(height()) * _RATIO;
     painter.drawEllipse(_end, r, r);
 }
 
-inline ThinLens::AbstractObject *Arrow::clone() const
+ThinLens::AbstractObject *Arrow::clone() const
 {
     return new Arrow(*this);
 }

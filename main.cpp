@@ -1,8 +1,5 @@
-// #include "mainwindow.hpp"
-
-#include <QApplication>
-// #include <QtGui/QMainWindow>
-#include <QPoint>
+#include <QtGui/QApplication>
+#include <QtCore/QPoint>
 
 #include "arrow.hpp"
 #include "mainwindow.hpp"
@@ -12,10 +9,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    Arrow arrow(QPoint(20, 60), QPoint(20, 100));
+    Arrow arrow(QPoint(200, 100), QPoint(200, 50));
     MainWindow w(arrow);
 
-    w.show();
+    w.showMaximized();
     
     return a.exec();
 }

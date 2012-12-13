@@ -1,11 +1,16 @@
 #include "mainwindow.hpp"
 
-#include <QPoint>
+#include <QtCore/QPoint>
 
 #include <algorithm>
 
-MainWindow::MainWindow(ThinLens::AbstractObject& object, QWidget *parent)
-    : QMainWindow(parent), _object(object), _system(_object)
+MainWindow::MainWindow
+(
+    ThinLens::AbstractObject &object,
+    int focus,
+    unsigned flags,
+    QWidget *parent
+) : QMainWindow(parent), _object(object), _system(_object, focus, flags)
 {
     setCentralWidget(&_system);
 }
@@ -32,7 +37,25 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     if(event -> buttons() & Qt::LeftButton)
-        _moveObject(event -> pos());
+    {
+        auto p = event -> pos();
+        if((p.x() > 0) && (p.x() < width()) && (p.y() > 0) && (p.y() < height()))
+            _moveObject(p);
+    }
+}
+
+void MainWindow::wheelEvent(QWheelEvent *event)
+{
+    _system.setFocus
+    (
+        _system.getFocus() +
+        (
+            (event -> delta() > 0)  ?
+            (DELTA_FOCUS)           :
+            (-DELTA_FOCUS)
+        )
+    );
+    update();
 }
 
 MainWindow::~MainWindow()

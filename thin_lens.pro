@@ -15,13 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     arrow.cpp \
-    thin_lens_widget/thinlenssystem.cpp
+    thin_lens_widget/thinlenssystem.cpp \
+    geometry/line.cpp
 
 HEADERS  += mainwindow.hpp \
     arrow.hpp \
     thin_lens_widget/thinlenssystem.hpp \
-    thin_lens_widget/abstractobject.hpp
+    thin_lens_widget/abstractobject.hpp \
+    geometry/line.hpp
 
 QMAKE_CXXFLAGS += -std=c++0x
-
-FORMS +=

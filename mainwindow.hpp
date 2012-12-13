@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <QMainWindow>
-#include <QPoint>
+#include <QtGui/QMainWindow>
+#include <QtCore/QPoint>
 
 #include <memory>
 
@@ -15,12 +15,19 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    MainWindow(ThinLens::AbstractObject &, QWidget *parent = 0);
+    MainWindow
+    (
+        ThinLens::AbstractObject &,
+        int focus = 40,
+        unsigned flags = ThinLens::ThinLensSystem::showInfo,
+        QWidget *parent = 0
+    );
     ~MainWindow();
 
 protected:
     void mousePressEvent(QMouseEvent *);
     void mouseMoveEvent(QMouseEvent *);
+    void wheelEvent(QWheelEvent *);
 
 private:
     void _moveObject(const QPoint &center);
@@ -28,6 +35,9 @@ private:
 private:
     ThinLens::AbstractObject &_object;
     ThinLens::ThinLensSystem _system;
+
+private:
+    static constexpr auto DELTA_FOCUS = 2u;
 };
 
 #endif // MAINWINDOW_HPP

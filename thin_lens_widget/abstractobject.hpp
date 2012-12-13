@@ -1,7 +1,7 @@
 #ifndef ABSTRACTOBJECT_HPP
 #define ABSTRACTOBJECT_HPP
 
-#include <QPoint>
+#include <QtCore/QPoint>
 #include <QtGui/QPainter>
 #include <QtGui/QPaintEvent>
 
@@ -19,6 +19,7 @@ public:
 
     virtual QPoint getBegin() const = 0;
     virtual QPoint getEnd() const = 0;
+    virtual double height() const = 0;
 
     virtual void setBegin(const QPoint &) = 0;
     virtual void setEnd(const QPoint &) = 0;

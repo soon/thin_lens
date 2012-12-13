@@ -1,7 +1,7 @@
 #ifndef ARROW_HPP
 #define ARROW_HPP
 
-#include <QPoint>
+#include <QtCore/QPoint>
 #include <QtGui/QPainter>
 #include <QtGui/QPaintEvent>
 #include <QtCore/qmath.h>
@@ -15,6 +15,7 @@ public:
 
     QPoint getBegin() const;
     QPoint getEnd() const;
+    double height() const;
 
     void setBegin(const QPoint &);
     void setEnd(const QPoint &);
